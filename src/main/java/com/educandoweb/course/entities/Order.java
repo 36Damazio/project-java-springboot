@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,23 +13,29 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 @Entity
 // Anotation para mudar o nome da tabela para nao dar conflito com o SQL
 @Table(name = "tb_order")
-public class Order implements Serializable{
+public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	// anotation que garante que o instante seja mostrado no formato de string do
+	// iso8601
+	// ela vai formatar o json para que apareca do jeito descrito acima
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
 	// estou criando a associação com o usuario
-	// Implementar o relacionamento entre pedido e cliente para o JPA transformar em chaves estrangeiras no banco de dados
+	// Implementar o relacionamento entre pedido e cliente para o JPA transformar em
+	// chaves estrangeiras no banco de dados
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private User client;
-	
-	public Order () {
+
+	public Order() {
 	}
 
 	public Order(Long id, Instant moment, User client) {
@@ -77,5 +85,5 @@ public class Order implements Serializable{
 		Order other = (Order) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }
